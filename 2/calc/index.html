@@ -6,9 +6,18 @@
   </head>
   <body>
     <input type="text" id="num1" />
+    <select id="operator">
+      <option value="plus">+</option>
+      <option value="minus">-</option>
+      <option value="multiply">×</option>
+      <option value="divide">÷</option>
+    </select>
     <input type="text" id="num2" />
     <button id="calc-btn">計算する</button>
     <p id="result"></p>
+    <!-- ここから追加 -->
+    <p id="error"></p>
+    <!-- ここまで追加 -->
     <script src="./main.js"></script>
   </body>
 </html>
