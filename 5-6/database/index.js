@@ -20,16 +20,21 @@ db.serialize(() => {
 
 const app = new Hono();
 
-app.get("/", (c) => {
-    return c.text("Hello World!");
+app.get("/", async (c) => { // 
+    const tweets = await new Promise((resolve) => {  // Promiseは非同期処理を扱うための仕組み
+        db.all(queries.Tweets.findAll, (err, rows) => { // db.allはデータベースから全てのデータを取得する
+            resolve(rows);                       // resolveはPromiseの処理が終わったことを通知する, rowsはデータベースから取得したデータ
+        });
+    });
+
+    return c.json(tweets);
 });
 
 serve(app);
 
 process.stdin.on("data", (data) => {
-  if (data.toString().trim() === "q") {
-    db.close();
-    process.exit();
-  }
+    if (data.toString().trim() === "q") {
+        db.close();
+        process.exit();
+    }
 });
-
