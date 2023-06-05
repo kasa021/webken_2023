@@ -18,16 +18,34 @@ db.serialize(() => {
     db.run(queries.Tweets.create, '今年こそは痩せるぞ！', 1, '2023-01-01 00:00:02');
 });
 
+const HTML = (body) => `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>これはただの文字列です</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    ${body}
+</body>
+</html>
+`;
+
 const app = new Hono();
 
-app.get("/", async (c) => { // 
-    const tweets = await new Promise((resolve) => {  // Promiseは非同期処理を扱うための仕組み
-        db.all(queries.Tweets.findAll, (err, rows) => { // db.allはデータベースから全てのデータを取得する
-            resolve(rows);                       // resolveはPromiseの処理が終わったことを通知する, rowsはデータベースから取得したデータ
+app.get("/", async (c) => {
+    const tweets = await new Promise((resolve) => {
+        db.all(queries.Tweets.findAll, (err, rows) => {
+            resolve(rows);
         });
     });
 
-    return c.json(tweets);
+    const response = HTML(`
+        <h1 class="title">ツイート一覧</h1>
+    `);
+
+    return c.html(response);
 });
 
 serve(app);
